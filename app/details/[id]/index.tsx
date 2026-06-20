@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
-import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+  TouchableOpacity,
+} from "react-native";
 import { Image } from "expo-image";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, router } from "expo-router";
 
 interface Product {
   id: number;
@@ -16,6 +22,7 @@ export default function ProductDetails() {
   const { id } = useLocalSearchParams();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
+  const [added, setAdded] = useState(false);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -39,10 +46,28 @@ export default function ProductDetails() {
         <ActivityIndicator size="large" color="#3B82F6" />
       ) : product ? (
         <View>
-          <Image source={{ uri: product.image }} style={styles.image} />
+          <Image
+            source={{ uri: product.image }}
+            style={styles.image}
+            contentFit="contain"
+          />
           <Text style={styles.title}>{product.title}</Text>
           <Text style={styles.price}>${product.price.toFixed(2)}</Text>
           <Text style={styles.description}>{product.description}</Text>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => setAdded(true)}
+          >
+            <Text style={styles.buttonText}>
+              {added ? "Added to Cart ✓" : "Add To Cart"}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => router.push("/(tabs)/products")}
+          >
+            <Text style={styles.buttonText}>Go To Products</Text>
+          </TouchableOpacity>
         </View>
       ) : (
         <Text>Product not found</Text>
@@ -99,11 +124,12 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 12,
     alignItems: "center",
+    marginTop: 20,
   },
 
   buttonText: {
     color: "#fff",
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "600",
   },
 });

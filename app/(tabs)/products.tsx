@@ -27,11 +27,12 @@ export default function Products() {
         data={products}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <TouchableOpacity style={styles.card} onPress={() => router.push(`./details/${item.id}`)}>
+          <TouchableOpacity style={styles.card} onPress={() => router.push({pathname: `/details/[id]/`, params: {id: item.id.toString()}})}>
             <Image source={{ uri: item.image }} style={styles.image} contentFit="contain" />
             <Text style={styles.title}>{item.title}</Text>
             <Text style={styles.price}>${item.price.toFixed(2)}</Text>
           </TouchableOpacity>
+          
         )}
       />
     </View>
