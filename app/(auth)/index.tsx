@@ -52,12 +52,17 @@ export default function Login() {
       const result = await response.json();
 
       if (result.token) {
+        if (rememberMe) {
+          await AsyncStorage.setItem("token", result.token);
+        }
         await AsyncStorage.setItem("token", result.token);
 
         Alert.alert("Success", "Login successful");
 
         router.replace("/(tabs)/products");
-      } else {
+      } 
+     
+      else {
         Alert.alert("Error", "Invalid username or password");
       }
     } catch (error) {
@@ -101,6 +106,13 @@ export default function Login() {
 
       <Text style={styles.error}>{errors.password?.message}</Text>
 
+     <TouchableOpacity style={styles.rememberMe} onPress={() => setRememberMe(!rememberMe)}>
+      <Text style={styles.rememberCheck}>
+    {rememberMe ? "☑" : "☐"} Remember Me
+  </Text>
+ 
+
+     </TouchableOpacity>
       <TouchableOpacity
         style={styles.button}
         onPress={handleSubmit(handleLogin)}
@@ -112,11 +124,6 @@ export default function Login() {
       >
         <Text style={styles.link}>
           Don't have an account? Register
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.rememberMe} onPress={() => setRememberMe(!rememberMe)}>
-        <Text style={styles.rememberMeText}>
-          {rememberMe ? "Forget Password?" : "Remember Me"}
         </Text>
       </TouchableOpacity>
     </ScrollView>
@@ -176,8 +183,8 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
 
-  rememberMeText: {
-    textAlign: "center",
+  rememberCheck: {
+    fontSize: 18,
     color: "#3B82F6",
   },
 });
